@@ -65,4 +65,7 @@ export interface ReportData {
   deviceInfo: DeviceInfo
   column?: string
   line?: string
+  minute?: string
+  hour: string
+  day: string
 }

@@ -5,6 +5,8 @@ specifiers:
   '@commitlint/cli': ^17.3.0
   '@commitlint/config-conventional': ^17.3.0
   '@element-plus/eslint-config': ^0.0.20221124
+  '@types/echarts': ^4.9.16
+  '@types/lodash': ^4.14.191
   '@types/node': ^16.11.56
   '@types/qs': ^6.9.7
   '@vitejs/plugin-vue': ^3.0.3
@@ -12,9 +14,12 @@ specifiers:
   autoprefixer: ^10.4.13
   axios: ^1.2.6
   cz-customizable: ^7.0.0
+  dayjs: ^1.11.7
+  echarts: ^5.4.1
   eslint: ^8.28.0
   husky: ^8.0.2
   lint-staged: ^13.0.3
+  lodash: ^4.17.21
   npm-run-all: ^4.1.5
   pinia: ^2.0.21
   postcss: ^8.4.19
@@ -36,6 +41,9 @@ dependencies:
   '@commitlint/config-conventional': 17.3.0
   axios: 1.2.6
   cz-customizable: 7.0.0
+  dayjs: 1.11.7
+  echarts: 5.4.1
+  lodash: 4.17.21
   pinia: 2.0.26_e7lp6ggkpgyi5vqd44m2kxvk6i
   qs: 6.11.0
   vue: 3.2.45
@@ -46,6 +54,8 @@ dependencies:
 devDependencies:
   '@arco-design/web-vue': 2.42.0_vue@3.2.45
   '@element-plus/eslint-config': 0.0.20221124_eslint@8.28.0
+  '@types/echarts': 4.9.16
+  '@types/lodash': 4.14.191
   '@types/node': 16.18.3
   '@types/qs': 6.9.7
   '@vitejs/plugin-vue': 3.2.0_vite@3.2.4+vue@3.2.45
@@ -435,12 +445,22 @@ packages:
     resolution: {integrity: sha512-yOlFc+7UtL/89t2ZhjPvvB/DeAr3r+Dq58IgzsFkOAvVC6NMJXmCGjbptdXdR9qsX7pKcTL+s87FtYREi2dEEQ==}
     dev: false
 
+  /@types/echarts/4.9.16:
+    resolution: {integrity: sha512-bfiagfPw3dWauAIJ9fgoJQoL4hLWlGcltqwbE6LGye0NIY5xnbZau+mDmadCzGojic3MWuFDCUiO25kl4sRGeA==}
+    dependencies:
+      '@types/zrender': 4.0.3
+    dev: true
+
   /@types/json-schema/7.0.11:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
     dev: true
 
   /@types/json5/0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+    dev: true
+
+  /@types/lodash/4.14.191:
+    resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
     dev: true
 
   /@types/mdast/3.0.10:
@@ -482,6 +502,10 @@ packages:
 
   /@types/unist/2.0.6:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
+    dev: true
+
+  /@types/zrender/4.0.3:
+    resolution: {integrity: sha512-EPI269lkHNsObwILJ1k1z7znLjKyePuWRy/XKK0shSGpBb9cIX307arcwJV4+2NeZj5wEjN06r4D8yFv7sI06g==}
     dev: true
 
   /@typescript-eslint/eslint-plugin/5.44.0_ube3tjiqnzgvdeoaoglyt5byny:
@@ -1343,7 +1367,6 @@ packages:
 
   /dayjs/1.11.7:
     resolution: {integrity: sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==}
-    dev: true
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -1467,6 +1490,13 @@ packages:
   /eastasianwidth/0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
     dev: true
+
+  /echarts/5.4.1:
+    resolution: {integrity: sha512-9ltS3M2JB0w2EhcYjCdmtrJ+6haZcW6acBolMGIuf01Hql1yrIV01L1aRj7jsaaIULJslEP9Z3vKlEmnJaWJVQ==}
+    dependencies:
+      tslib: 2.3.0
+      zrender: 5.4.1
+    dev: false
 
   /editor/1.0.0:
     resolution: {integrity: sha512-SoRmbGStwNYHgKfjOrX2L0mUvp9bUVv0uPppZSOMAntEbcFtoC3MKF5b3T6HQPXKIV+QGY3xPO3JK5it5lVkuw==}
@@ -4137,6 +4167,10 @@ packages:
   /tslib/1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
 
+  /tslib/2.3.0:
+    resolution: {integrity: sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==}
+    dev: false
+
   /tslib/2.4.1:
     resolution: {integrity: sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==}
     dev: true
@@ -4468,3 +4502,9 @@ packages:
   /yocto-queue/0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  /zrender/5.4.1:
+    resolution: {integrity: sha512-M4Z05BHWtajY2241EmMPHglDQAJ1UyHQcYsxDNzD9XLSkPDqMq4bB28v9Pb4mvHnVQ0GxyTklZ/69xCFP6RXBA==}
+    dependencies:
+      tslib: 2.3.0
+    dev: false

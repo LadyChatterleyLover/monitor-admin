@@ -62,7 +62,7 @@ service.interceptors.response.use(
           err.message = '网络超时'
           break
         default:
-          err.message = `连接错误${err.response.msg}`
+          err.message = `连接错误`
       }
     } else {
       err.message = '连接到服务器失败'

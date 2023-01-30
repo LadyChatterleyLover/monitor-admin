@@ -16,6 +16,9 @@
     "@commitlint/config-conventional": "^17.3.0",
     "axios": "^1.2.6",
     "cz-customizable": "^7.0.0",
+    "dayjs": "^1.11.7",
+    "echarts": "^5.4.1",
+    "lodash": "^4.17.21",
     "pinia": "^2.0.21",
     "qs": "^6.11.0",
     "vue": "^3.2.38",
@@ -26,6 +29,8 @@
   "devDependencies": {
     "@arco-design/web-vue": "^2.42.0",
     "@element-plus/eslint-config": "^0.0.20221124",
+    "@types/echarts": "^4.9.16",
+    "@types/lodash": "^4.14.191",
     "@types/node": "^16.11.56",
     "@types/qs": "^6.9.7",
     "@vitejs/plugin-vue": "^3.0.3",

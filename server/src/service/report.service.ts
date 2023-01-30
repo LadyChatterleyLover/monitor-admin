@@ -8,6 +8,7 @@ export interface Data {
   current: number
   pageSize: number
   appKey: string
+  type: string
   startTime?: string | number
   endTime?: string | number
 }
@@ -20,13 +21,15 @@ export class RepostService {
   async getData(@Body() params: Data) {
     const {
       appKey,
-      current = 1,
-      pageSize = 10,
+      type,
+      current,
+      pageSize,
       startTime = '',
       endTime = '',
     } = params
     let query: any = {
-      appKey
+      appKey,
+      type
     }
     if (startTime && endTime) {
       query.$and = [
@@ -36,14 +39,18 @@ export class RepostService {
         { time: { $lt: dayjs(endTime).valueOf() } },
       ]
     }
-    const res = await this.reportModel
+    let res = []
+    if (current && pageSize) {
+      res = await this.reportModel
       .find(query)
       .skip((current - 1) * pageSize)
-      .limit(pageSize)
+      .limit(pageSize).sort({time:1})
+    } else {
+      res = await this.reportModel
+      .find(query).sort({time:1})
+    }
     const total = await this.reportModel
-      .find({
-        appKey,
-      })
+      .find(query)
       .count()
     return {
       data: res,

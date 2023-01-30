@@ -149,6 +149,7 @@ const login = () => {
           Message.success(res.msg)
           router.push('/project')
         } else {
+          getCaptcha()
           Message.error(res.msg)
         }
       })

@@ -1,4 +1,4 @@
-import { RepostService } from '../service/report.service'
+import { Data, RepostService } from '../service/report.service'
 import { Body, Controller, Inject, Post } from '@midwayjs/decorator'
 
 @Controller('/')
@@ -13,7 +13,7 @@ export class HomeController {
 
   @Post('/getData')
   async getData(
-    @Body() params: { current: number; pageSize: number; appKey: string }
+    @Body() params: Data
   ) {
     return await this.repostService.getData(params)
   }

@@ -1,32 +1,42 @@
 <template>
-  <div>jsError</div>
+  <div>
+    <a-card>
+      <TextBoard :total="total" />
+    </a-card>
+    <a-card class="mt-8">
+      <Charts :table-data="tableData" />
+    </a-card>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import dayjs from 'dayjs'
 import type { ReportData } from '@/types/report'
 import api from '@/api'
+import TextBoard from '@/components/jsError/TextBoard.vue'
+import Charts from '@/components/jsError/Charts.vue'
 const appKey = localStorage.getItem('monitor-key') as string
 
-const current = ref(1)
-const pageSize = ref(10)
+const total = ref(0)
 const tableData = ref<ReportData[]>([])
 
-const getData = () => {
+const getTableData = () => {
   api.report
     .getData({
       appKey,
-      current: current.value,
-      pageSize: pageSize.value,
+      type: 'error',
+      startTime: dayjs().startOf('day'),
+      endTime: dayjs().endOf('day'),
     })
     .then((res) => {
-      tableData.value = res.data!.filter((item) => item.type === 'error')
-      console.log(tableData.value)
+      tableData.value = res.data!
+      total.value = res.total!
     })
 }
 
 onMounted(() => {
-  getData()
+  getTableData()
 })
 </script>
 

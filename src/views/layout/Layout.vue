@@ -7,7 +7,7 @@
       <a-layout-header style="height: 60px; border-bottom: 1px solid #eee">
         <NavHeader v-model:collapsed="collapsed" />
       </a-layout-header>
-      <a-layout style="padding: 0 24px">
+      <a-layout style="padding: 24px; background: #f0f2f5">
         <a-layout-content>
           <router-view />
         </a-layout-content>
