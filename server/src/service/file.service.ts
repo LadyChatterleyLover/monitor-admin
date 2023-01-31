@@ -3,6 +3,7 @@ import { InjectEntityModel } from '@midwayjs/typegoose'
 import { ReturnModelType } from '@typegoose/typegoose'
 import { File } from '../entity/file'
 import { OSSService } from '@midwayjs/oss'
+import { makeHttpRequest } from '@midwayjs/core'
 
 export interface UploadFile {
   fieldname: string
@@ -52,5 +53,16 @@ export class FileService {
       console.log(error)
     }
     return res.url
+  }
+
+  async readContent(url: string) {
+     const content = await makeHttpRequest(url, {
+      dataType: 'text'
+     })
+    return {
+      code: 200,
+      data:  content.data,
+      msg: '读取成功'
+    }
   }
 }

@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import { inject, nextTick, ref, watch } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 import * as Echarts from 'echarts'
 import cloneDeep from 'lodash/cloneDeep'
 import groupBy from 'lodash/groupBy'
@@ -61,11 +61,13 @@ const chartsOptions = ref<any>({
     },
     formatter(params: any) {
       const item = group.value && group.value[params.name]
-      return `${item?.[0].day} ${params.name}
+      return `${item?.[0].day} ${
+        model.value.timeType !== '3' ? params.name : ''
+      }
         <br />
         <div style="display: flex;align-items: center">
          <div style="background: #3f90f7;width: 10px;height: 10px;border-radius: 100%"></div>
-         <div style="margin-left: 6px">异常数量: ${params.value}</div>  
+         <div style="margin-left: 6px">异常数量: ${params.value}</div>
         </div>`
     },
   },

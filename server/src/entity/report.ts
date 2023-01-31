@@ -55,6 +55,24 @@ export class Report {
   @prop()
   public uuid?: string;
 
+  @prop()
+  public url?: string;
+
+  @prop()
+  public elapsedTime?: number;
+
+  @prop()
+  public name?: string;
+
+  @prop()
+  public isError?: boolean;
+
+  @prop({ allowMixed: 0 })
+  public request?: any;
+
+  @prop({ allowMixed: 0 })
+  public response?: any;
+
   @prop({select: false})
   public __v: number;
 }

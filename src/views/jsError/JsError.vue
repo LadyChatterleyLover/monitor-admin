@@ -6,6 +6,9 @@
     <a-card class="mt-8">
       <Charts :table-data="tableData" />
     </a-card>
+    <a-card class="mt-8">
+      <JsErrorTable :table-data="tableData" :total="total" />
+    </a-card>
   </div>
 </template>
 
@@ -16,11 +19,11 @@ import type { ReportData } from '@/types/report'
 import api from '@/api'
 import TextBoard from '@/components/jsError/TextBoard.vue'
 import Charts from '@/components/jsError/Charts.vue'
+import JsErrorTable from '@/components/jsError/JsErrorTable.vue'
 const appKey = localStorage.getItem('monitor-key') as string
 
 const total = ref(0)
 const tableData = ref<ReportData[]>([])
-
 const getTableData = () => {
   api.report
     .getData({

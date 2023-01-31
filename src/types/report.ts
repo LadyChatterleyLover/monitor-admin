@@ -33,6 +33,8 @@ export interface Breadcrumb {
   status: 'error' | 'ok'
   time: number
   type: EventTypes
+  content?: string
+  message?: string
 }
 
 export interface DeviceInfo {
@@ -68,4 +70,10 @@ export interface ReportData {
   minute?: string
   hour: string
   day: string
+  count?: number
+  elapsedTime?: number
+  url?: string
+  isError?: boolean
+  request?: any
+  response?: any
 }

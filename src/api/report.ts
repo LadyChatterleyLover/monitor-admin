@@ -13,4 +13,10 @@ export default {
   }) {
     return post<ReportData[]>('/getData', params)
   },
+  upload(params: FormData) {
+    return post<File>('/file/upload', params)
+  },
+  readContent(params: { url: string }) {
+    return post('/file/readContent', params)
+  },
 }

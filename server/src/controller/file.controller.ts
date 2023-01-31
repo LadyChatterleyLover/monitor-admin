@@ -1,4 +1,4 @@
-import { Controller, Files, Inject, Post } from '@midwayjs/decorator'
+import { Body, Controller, Files, Inject, Post } from '@midwayjs/decorator'
 import { FileService } from '../service/file.service'
 
 @Controller('/file')
@@ -19,5 +19,10 @@ export class HomeController {
       this.ctx.userContext._id,
       file._ext
     )
+  }
+
+  @Post('/readContent')
+  async readContent(@Body() params: {url: string}) {
+    return await this.fileService.readContent(params.url)
   }
 }
