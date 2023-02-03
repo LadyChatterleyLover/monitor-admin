@@ -96,7 +96,7 @@ const chartsOptions = ref<any>({
         <br />
         <div style="display: flex;align-items: center">
          <div style="background: #3f90f7;width: 10px;height: 10px;border-radius: 100%"></div>
-         <div style="margin-left: 6px">成功次数:${item.length}</div>
+         <div style="margin-left: 6px">失败次数:${item.length}</div>
         </div>
         <div style="display: flex;align-items: center">
           <div style="background: #2fc25b;width: 10px;height: 10px;border-radius: 100%"></div>
@@ -164,7 +164,6 @@ const setData = (type: string) => {
     tableList.value.push(obj)
   }
   failList.value = tableList.value.filter((item) => item.isError)
-  console.log('fail', tableList.value)
   group.value = groupBy(failList.value, type) as any
   initChart(group.value)
 }
@@ -173,15 +172,9 @@ const initChart = (group: any) => {
   nextTick(() => {
     chartInstance.value =
       chartInstance.value ?? markRaw(Echarts.init(chartRef2.value!))
-    chartsOptions.value.xAxis!.data = Object.keys(group).sort((a, b) => {
-      const m1: any = a.split(':')[0]
-      const s1: any = a.split(':')[1]
-      const m2: any = b.split(':')[0]
-      const s2: any = b.split(':')[1]
-      const r1 = m1 * 60 + s1 * 60
-      const r2 = m2 * 60 + s2 * 60
-      return r1 - r2
-    })
+    chartsOptions.value.xAxis!.data = Object.keys(group).sort((a, b) =>
+      a.localeCompare(b)
+    )
     chartsOptions.value.series[0].data = Object.keys(group).map(
       (item) => group[item]?.length
     )

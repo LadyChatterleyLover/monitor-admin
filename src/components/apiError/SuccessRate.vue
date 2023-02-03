@@ -177,15 +177,9 @@ const initChart = (group: any) => {
   nextTick(() => {
     chartInstance.value =
       chartInstance.value ?? markRaw(Echarts.init(chartRef.value!))
-    chartsOptions.value.xAxis!.data = Object.keys(group).sort((a, b) => {
-      const m1: any = a.split(':')[0]
-      const s1: any = a.split(':')[1]
-      const m2: any = b.split(':')[0]
-      const s2: any = b.split(':')[1]
-      const r1 = m1 * 60 + s1 * 60
-      const r2 = m2 * 60 + s2 * 60
-      return r1 - r2
-    })
+    chartsOptions.value.xAxis!.data = Object.keys(group).sort((a, b) =>
+      a.localeCompare(b)
+    )
     chartsOptions.value.series[0].data = Object.keys(group).map(
       (item) => group[item]?.length
     )
