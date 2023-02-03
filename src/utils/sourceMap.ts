@@ -30,6 +30,7 @@ export const findCodeBySourceMap = async (
     line: Number(line),
     column: Number(column),
   })
+  console.log('result', result)
   const code = sourcesContent![sources.indexOf(result.source)]
   if (!code) return
   const codeList = code.split('\n')

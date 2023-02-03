@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import { nextTick, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import * as Echarts from 'echarts'
 import cloneDeep from 'lodash/cloneDeep'
 import groupBy from 'lodash/groupBy'
@@ -37,16 +37,18 @@ const chartRef = ref<HTMLDivElement>()
 const chartInstance = ref<Echarts.ECharts>()
 const data = ref<ReportData[]>([])
 const group = ref<any>({})
+const disableMinute = ref(false)
+const disableHour = ref(false)
 const model = ref({
   time: [dayjs().format('YYYY-MM-DD'), dayjs().format('YYYY-MM-DD')],
   timeType: '1',
 })
 
-const radioOptions = [
-  { label: '分钟', value: '1' },
-  { label: '小时', value: '2' },
+const radioOptions = computed(() => [
+  { label: '分钟', value: '1', disabled: disableMinute.value },
+  { label: '小时', value: '2', disabled: disableHour.value },
   { label: '天', value: '3' },
-]
+])
 
 const chartsOptions = ref<any>({
   tooltip: {
@@ -124,10 +126,15 @@ watch(
     const diff = dayjs(val[1]).diff(dayjs(val[0]), 'day')
     if (diff < 1) {
       model.value.timeType = '1'
+      disableMinute.value = false
+      disableHour.value = false
     } else if (diff === 1) {
       model.value.timeType = '2'
+      disableMinute.value = true
     } else {
       model.value.timeType = '3'
+      disableMinute.value = true
+      disableHour.value = true
     }
     api.report
       .getData({
