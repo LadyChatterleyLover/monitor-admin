@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, markRaw, nextTick, ref, watch } from 'vue'
 import * as Echarts from 'echarts'
 import cloneDeep from 'lodash/cloneDeep'
 import groupBy from 'lodash/groupBy'
@@ -94,13 +94,17 @@ const setData = () => {
     item.hour = dayjs(item.time).format('HH:00')
     item.day = dayjs(item.time).format('MM-DD')
   })
-  group.value = groupBy(data.value, 'minute')
+  group.value = groupBy(
+    data.value.sort((a, b) => a.time! - b.time!),
+    'minute'
+  )
   initChart(group.value)
 }
 
 const initChart = (group: any) => {
   nextTick(() => {
-    chartInstance.value = chartInstance.value ?? Echarts.init(chartRef.value!)
+    chartInstance.value =
+      chartInstance.value ?? markRaw(Echarts.init(chartRef.value!))
     chartsOptions.value.xAxis!.data = Object.keys(group)
     chartsOptions.value.series[0].data = Object.keys(group).map(
       (item) => group[item]?.length

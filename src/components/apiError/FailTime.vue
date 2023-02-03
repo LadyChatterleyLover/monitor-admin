@@ -44,6 +44,7 @@ export interface TableData {
   minute?: string
   hour?: string
   day?: string
+  time?: number
 }
 
 const props = defineProps<{
@@ -141,7 +142,10 @@ const chartsOptions = ref<any>({
 })
 
 const setData = (type: string) => {
-  const urlGroup = groupBy(data.value, 'url')
+  const urlGroup = groupBy(
+    data.value.sort((a, b) => a.time! - b.time!),
+    'url'
+  )
   for (const i in urlGroup) {
     const arr: ReportData[] = urlGroup[i]
     const success = arr.filter((item) => !item.isError)
@@ -160,6 +164,7 @@ const setData = (type: string) => {
       obj.minute = dayjs(item.time).format('HH:mm')
       obj.hour = dayjs(item.time).format('HH:00')
       obj.day = dayjs(item.time).format('MM-DD')
+      obj.time = item.time
     })
     tableList.value.push(obj)
   }
@@ -218,7 +223,7 @@ watch(
     api.report
       .getData({
         appKey,
-        type: 'error',
+        type: 'xhr',
         startTime: dayjs(val[0]).startOf('day'),
         endTime: dayjs(val[1]).endOf('day'),
       })

@@ -1,23 +1,21 @@
 <template>
-  <a-form :model="model" layout="inline">
-    <a-form-item
-      field="time"
-      :label-col-props="{
-        span: 0,
-      }"
-    >
-      <a-range-picker
-        v-model="model.time"
-        style="width: 260px"
-        :allow-clear="false"
-      />
-    </a-form-item>
-    <a-form-item field="timeType" label="时间粒度">
-      <a-radio-group v-model="model.timeType" :options="radioOptions" />
-    </a-form-item>
-  </a-form>
-  <div class="mt-5">
-    <div ref="chartRef" style="height: 360px" />
+  <div>
+    <a-form :model="model" layout="inline">
+      <a-form-item
+        field="time"
+        :label-col-props="{
+          span: 0,
+        }"
+      >
+        <a-range-picker v-model="model.time" style="width: 260px" />
+      </a-form-item>
+      <a-form-item field="timeType" label="时间粒度">
+        <a-radio-group v-model="model.timeType" :options="radioOptions" />
+      </a-form-item>
+    </a-form>
+    <div class="mt-5">
+      <div ref="chartRef" style="height: 360px" />
+    </div>
   </div>
 </template>
 
@@ -27,25 +25,24 @@ import * as Echarts from 'echarts'
 import cloneDeep from 'lodash/cloneDeep'
 import groupBy from 'lodash/groupBy'
 import dayjs from 'dayjs'
-import type { Breadcrumb, DeviceInfo, ReportData } from '@/types/report'
+import type { DeviceInfo, ReportData } from '@/types/report'
 import api from '@/api'
 
 export interface TableData {
   url?: string
-  count?: number
-  successRate?: number
-  failRate?: number
-  elapsedTime?: number
-  isError?: boolean
-  breadcrumb?: Breadcrumb[]
+  appKey?: string
+  time?: number
   deviceInfo?: DeviceInfo
   username?: string
   roleName?: string
+  count?: number
+  userCount?: number
   minute?: string
   hour?: string
   day?: string
-  time?: number
 }
+
+type TimeType = 'minute' | 'hour' | 'day'
 
 const props = defineProps<{
   tableData: ReportData[]
@@ -54,11 +51,9 @@ const props = defineProps<{
 const appKey = localStorage.getItem('monitor-key') as string
 const chartRef = ref<HTMLDivElement>()
 const chartInstance = ref<Echarts.ECharts>()
-const tableList = ref<TableData[]>([])
-const successList = ref<TableData[]>([])
-const failList = ref<TableData[]>([])
 const data = ref<ReportData[]>([])
-const group = ref<any>()
+const tableList = ref<TableData[]>([])
+const group = ref<any>({})
 const disableMinute = ref(false)
 const disableHour = ref(false)
 const model = ref({
@@ -74,7 +69,7 @@ const radioOptions = computed(() => [
 
 const chartsOptions = ref<any>({
   legend: {
-    data: ['请求次数', '成功率'],
+    data: ['访问次数', '用户数'],
   },
   tooltip: {
     show: true,
@@ -88,24 +83,23 @@ const chartsOptions = ref<any>({
     },
     formatter(params: any) {
       const item = group.value && group.value[params.name]
-      let rate = 0
+      let arr: string[] = []
       item.forEach((i: TableData) => {
-        rate += i.successRate!
+        arr.push(i.username as string)
       })
+      arr = arr.filter((item, index, list) => list.indexOf(item) === index)
       return `${item?.[0].day} ${
         model.value.timeType !== '3' ? params.name : ''
       }
         <br />
         <div style="display: flex;align-items: center">
          <div style="background: #3f90f7;width: 10px;height: 10px;border-radius: 100%"></div>
-         <div style="margin-left: 6px">请求次数:${item.length}</div>
+         <div style="margin-left: 6px">访问次数: ${item.length}</div>
         </div>
         <div style="display: flex;align-items: center">
-          <div style="background: #2fc25b;width: 10px;height: 10px;border-radius: 100%"></div>
-          <div style="margin-left: 6px">成功率: ${(rate / item.length).toFixed(
-            2
-          )}%</div>
-        </div
+         <div style="background: #2fc25b;width: 10px;height: 10px;border-radius: 100%"></div>
+         <div style="margin-left: 6px">用户数: ${arr.length}</div>
+        </div>
         `
     },
   },
@@ -117,62 +111,57 @@ const chartsOptions = ref<any>({
     {
       type: 'value',
       min: 0,
-      interval: 15,
+      interval: 20,
     },
     {
       type: 'value',
       min: 0,
-      interval: 10,
-      axisLabel: {
-        formatter: '{value} %',
-      },
+      interval: 5,
     },
   ],
   series: [
     {
-      type: 'bar',
-      name: '请求次数',
+      type: 'line',
+      name: '访问次数',
       data: [],
       yAxisIndex: 0,
     },
     {
       type: 'line',
-      name: '成功率',
+      name: '用户数',
       data: [],
       yAxisIndex: 1,
     },
   ],
 })
 
-const setData = (type: string) => {
-  const urlGroup = groupBy(data.value, 'url')
+const setData = (type: TimeType) => {
+  const urlGroup = groupBy(data.value, 'page_url')
   for (const i in urlGroup) {
-    const arr: ReportData[] = urlGroup[i]
-    const success = arr.filter((item) => !item.isError)
-    const fail = arr.filter((item) => item.isError)
-    const obj: TableData = {
-      elapsedTime: 0,
-    }
+    const users = urlGroup[i]
+      .map((item) => item.username)
+      .filter((item, index, arr) => arr.indexOf(item) === index)
+    const obj: TableData = {}
     obj.url = i
     obj.count = urlGroup[i].length
-    obj.successRate = Number(((success.length / arr.length) * 100).toFixed(2))
-    obj.failRate = Number(((fail.length / arr.length) * 100).toFixed(2))
-    arr.forEach((item) => {
-      obj.elapsedTime! = item.elapsedTime!
-      obj.isError = item.isError
+    urlGroup[i].forEach((item) => {
+      obj.appKey = item.appKey
+      obj.deviceInfo = item.deviceInfo
+      obj.url = item.page_url
+      obj.time = item.time
+      obj.username = item.username
+      obj.roleName = item.roleName
+      obj.userCount = users.length
       obj.minute = dayjs(item.time).format('HH:mm')
       obj.hour = dayjs(item.time).format('HH:00')
       obj.day = dayjs(item.time).format('MM-DD')
-      obj.time = item.time
     })
     tableList.value.push(obj)
   }
-  successList.value = tableList.value.filter((item) => !item.isError)
-  failList.value = tableList.value.filter((item) => item.isError)
   group.value = groupBy(
-    successList.value.sort((a, b) => a.time! - b.time!),
+    tableList.value.sort((a, b) => a.time! - b.time!),
     type
-  ) as any
+  )
   initChart(group.value)
 }
 
@@ -183,15 +172,16 @@ const initChart = (group: any) => {
     chartsOptions.value.xAxis!.data = Object.keys(group).sort((a, b) =>
       a.localeCompare(b)
     )
-    chartsOptions.value.series[0].data = Object.keys(group).map(
-      (item) => group[item]?.length
-    )
+    chartsOptions.value.series[0].data = Object.keys(group).map((item) => {
+      return group[item].length
+    })
     chartsOptions.value.series[1].data = Object.keys(group).map((item) => {
-      let rate = 0
+      let arr: string[] = []
       group[item].forEach((i: any) => {
-        rate += i.successRate
+        arr.push(i.username)
       })
-      return rate / group[item].length
+      arr = arr.filter((item, index, list) => list.indexOf(item) === index)
+      return arr.length
     })
     chartInstance.value.setOption(chartsOptions.value)
   })
@@ -226,7 +216,7 @@ watch(
     api.report
       .getData({
         appKey,
-        type: 'xhr',
+        type: 'history',
         startTime: dayjs(val[0]).startOf('day'),
         endTime: dayjs(val[1]).endOf('day'),
       })
@@ -241,7 +231,7 @@ watch(
 watch(
   () => [model.value.timeType, data.value],
   (val) => {
-    let type = ''
+    let type: TimeType = 'minute'
     if (val[0] === '1') {
       group.value = groupBy(val[1] as ReportData[], 'minute')
       type = 'minute'
