@@ -16,13 +16,22 @@
         {{ totalTime / 1000 }}s
       </div>
     </div>
-    <div class="flex-1 flex flex-col justify-center items-center p-2 item">
-      <div class="text-[#9ea7b4] text-xs">最长耗时</div>
-      <a-tooltip :content="maxTimeRequest">
-        <div class="font-bold text-2xl text-[#666] mt-1 cursor-pointer">
-          {{ maxTime ? maxTime / 1000 : 0 }}s
+    <div class="p-2 flex-1 item">
+      <div class="flex flex-col justify-center items-center">
+        <div class="relative">
+          <div class="text-[#9ea7b4] text-xs">最长耗时</div>
+          <a-tooltip :content="maxTimeRequest">
+            <div
+              class="absolute top-[-15px] right-[-20px] text-base cursor-pointer"
+            >
+              <icon-question-circle-fill />
+            </div>
+          </a-tooltip>
         </div>
-      </a-tooltip>
+        <div class="font-bold text-2xl text-[#666] mt-1">
+          {{ maxTime / 1000 }}s
+        </div>
+      </div>
     </div>
   </div>
 </template>

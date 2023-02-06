@@ -15,22 +15,28 @@
     <a-card class="mt-5">
       <ApiErrorTable :table-data="tableData" :total="total" />
     </a-card>
+    <a-card title="请求详情" class="mt-5">
+      <ApiDetail :table-data="tableData" />
+    </a-card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, provide } from 'vue'
+import { onMounted, provide, ref } from 'vue'
 import dayjs from 'dayjs'
+import cloneDeep from 'lodash/cloneDeep'
 import type { ReportData } from '@/types/report'
 import api from '@/api'
 import TextBoard from '@/components/apiError/TextBoard.vue'
 import Charts from '@/components/apiError/Charts.vue'
 import ApiErrorTable from '@/components/apiError/ApiErrorTable.vue'
+import ApiDetail from '@/components/apiError/ApiDetail.vue'
 
 const appKey = localStorage.getItem('monitor-key') as string
 
 const total = ref(0)
 const tableData = ref<ReportData[]>([])
+const tableList = ref<ReportData[]>([])
 const successList = ref<ReportData[]>([])
 const failList = ref<ReportData[]>([])
 const successPoint = ref(0)
@@ -64,6 +70,7 @@ const getTableData = () => {
       maxTimeRequest.value =
         (tableData.value.find((item) => item.elapsedTime === maxTime.value)
           ?.url as string) ?? ''
+      tableList.value = cloneDeep(tableData.value)
     })
 }
 
