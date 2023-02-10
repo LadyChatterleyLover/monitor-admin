@@ -1,10 +1,10 @@
 <template>
   <div>
     <a-card>
-      <Charts :table-data="tableData" />
+      <PageTable :table-data="tableData" :total="total" />
     </a-card>
     <a-card class="mt-5">
-      <PageTable :table-data="tableData" :total="total" />
+      <PageData :table-data="tableData" :total="total" />
     </a-card>
   </div>
 </template>
@@ -14,7 +14,7 @@ import { onMounted, ref } from 'vue'
 import dayjs from 'dayjs'
 import type { ReportData } from '@/types/report'
 import api from '@/api'
-import Charts from '@/components/pageDetail/Charts.vue'
+import PageData from '@/components/pageDetail/PageData.vue'
 import PageTable from '@/components/pageDetail/PageTable.vue'
 const appKey = localStorage.getItem('monitor-key') as string
 

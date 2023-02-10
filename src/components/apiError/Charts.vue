@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, inject } from 'vue'
+import { ref } from 'vue'
 import SuccessRate from './SuccessRate.vue'
 import SuccessTime from './SuccessTime.vue'
 import FailTime from './FailTime.vue'
@@ -25,12 +25,9 @@ defineProps<{
   tableData: ReportData[]
 }>()
 
-const getTableData = inject<any>('getTableData')!
-
 const activeKey = ref('1')
 
 const tabClick = (key: any) => {
   activeKey.value = key
-  getTableData()
 }
 </script>

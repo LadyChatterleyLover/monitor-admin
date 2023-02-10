@@ -9,8 +9,18 @@
         <vxe-column type="seq" align="center" width="60" />
         <vxe-column field="appKey" title="项目名称" align="center" />
         <vxe-column field="url" title="页面URL" align="center" />
-        <vxe-column field="count" title="访问次数" align="center" />
-        <vxe-column field="userCount" title="用户数" align="center" />
+        <vxe-column field="username" title="用户名" align="center" />
+        <vxe-column field="roleName" title="职位" align="center" />
+        <vxe-column field="browser" title="浏览器信息" align="center">
+          <template #default="scope">
+            <span>{{ scope.row?.deviceInfo?.browser }}</span>
+          </template>
+        </vxe-column>
+        <vxe-column field="os" title="操作系统" align="center">
+          <template #default="scope">
+            <span>{{ scope.row?.deviceInfo?.os }}</span>
+          </template>
+        </vxe-column>
       </vxe-table>
       <div class="flex justify-end mt-4">
         <a-pagination
@@ -19,6 +29,7 @@
           show-total
           show-jumper
           show-page-size
+          :page-size-options="[10, 20, 50, 100]"
           @change="changeCurrent"
           @page-size-change="changeSize"
         />
@@ -31,7 +42,6 @@
 import { ref, watch } from 'vue'
 import dayjs from 'dayjs'
 import cloneDeep from 'lodash/cloneDeep'
-import groupBy from 'lodash/groupBy'
 import type { DeviceInfo, ReportData } from '@/types/report'
 import api from '@/api'
 
@@ -66,8 +76,6 @@ const getTableData = () => {
       type: 'history',
       startTime: dayjs(time.value).startOf('day'),
       endTime: dayjs(time.value).endOf('day'),
-      current: current.value,
-      pageSize: pageSize.value,
     })
     .then((res) => {
       data.value = res.data!
@@ -97,26 +105,18 @@ const changeSize = (val: number) => {
 }
 
 const setData = () => {
-  const group = groupBy(data.value, 'page_url')
-  for (const i in group) {
-    const users = group[i]
-      .map((item) => item.username)
-      .filter((item, index, arr) => arr.indexOf(item) === index)
+  const arr: TableData[] = []
+  data.value.forEach((item) => {
     const obj: TableData = {}
-    obj.url = i
-    obj.count = group[i].length
-    data.value.forEach((item) => {
-      obj.appKey = item.appKey
-      obj.deviceInfo = item.deviceInfo
-      obj.url = item.page_url
-      obj.time = item.time
-      obj.username = item.username
-      obj.roleName = item.roleName
-      obj.userCount = users.length
-    })
-    tableList.value.push(obj)
-  }
-  cloneTableList.value = cloneDeep(tableList.value)
+    obj.appKey = item.appKey
+    obj.deviceInfo = item.deviceInfo
+    obj.url = item.page_url
+    obj.time = item.time
+    obj.username = item.username
+    obj.roleName = item.roleName
+    arr.push(obj)
+  })
+  cloneTableList.value = cloneDeep(arr)
   tableList.value = cloneTableList.value.slice(
     current.value - 1,
     pageSize.value

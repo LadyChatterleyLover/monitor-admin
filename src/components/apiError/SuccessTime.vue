@@ -114,12 +114,12 @@ const chartsOptions = ref<any>({
     {
       type: 'value',
       min: 0,
-      interval: 5,
+      interval: 100,
     },
     {
       type: 'value',
       min: 0,
-      interval: 50,
+      interval: 150,
       axisLabel: {
         formatter: '{value} s',
       },

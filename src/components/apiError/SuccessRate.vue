@@ -117,7 +117,7 @@ const chartsOptions = ref<any>({
     {
       type: 'value',
       min: 0,
-      interval: 15,
+      interval: 20,
     },
     {
       type: 'value',
